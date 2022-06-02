@@ -13,17 +13,23 @@ export const AuthContextProvider = ({children}) => {
             setValue("Log out");
         }else if(input === "Log out"){
             setValue("Log in")
-            setData([]);
         }
     }
 
-    const isAuth = (value) => {
+    const isAuth = (value,condition) => {
 
-        if(value === "Log in"){
-       fetch("https://reqres.in/api/users?page=2")
+    if(condition === "Log in"){
+       fetch("https://reqres.in/api/users",{
+           method:"POST",
+           headers: { "content-type": "application/json" },
+        body: JSON.stringify(value),
+       })
        .then((res) => res.json())
-       .then((res) => setData(res.data[0]));
-        }
+       .then((res) => setData(res));
+    }else if(condition === "Log out"){
+        setData([]);
+    }
+       
     }
 
 

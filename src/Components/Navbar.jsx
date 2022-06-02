@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import Details from "./Details";
 import { Button, ButtonGroup, StylesProvider } from "@chakra-ui/react";
@@ -12,11 +12,34 @@ import {
 import Styles from "./Navbar.module.css";
 
 const Navbar = () => {
+
+  const[creds, setCreds] = useState({})
+
+
   const { value, isAuth, toggleAuth, data } = useContext(AuthContext);
+
+
+  const handlechange = (e) => {
+    let {name,value} = e.target;
+
+    setCreds({...creds,[name]:value})
+  }
+
+  const handlesubmit = (inputcreds) => {
+    setCreds(inputcreds);
+
+    isAuth(creds,value);
+  }
+
+
+/*useEffect(() => {
+  console.log(creds);
+},[creds])*/
   return (
     <div >
+      <div>
       <Breadcrumb separator="" border="1px solid black" display="flex" w="90%" margin="auto" >
-        <BreadcrumbItem>
+        <BreadcrumbItem >
           <BreadcrumbLink href="#">Home</BreadcrumbLink>
         </BreadcrumbItem>
 
@@ -28,21 +51,25 @@ const Navbar = () => {
           <BreadcrumbLink href="#">Contact</BreadcrumbLink>
         </BreadcrumbItem>
 
-        <BreadcrumbItem marginLeft="650px" isCurrentPage>
+        <BreadcrumbItem marginLeft="630px" isCurrentPage>
         <Details data={data} />
-        </BreadcrumbItem>
+        </BreadcrumbItem> 
+      </Breadcrumb>
+      </div>
 
-        <BreadcrumbItem isCurrentPage>
-        <Button
+      <div className={Styles.inputbox}>
+          <input className={Styles.name} type="text"  placeholder="Phone / Email" name="userid" onChange={handlechange}/>
+
+          <input className={Styles.pass} type="password" placeholder="Password" name="password" onChange={handlechange}/>
+        
+          <Button
           colorScheme="teal"
           size="sm"
-          onClick={() => (toggleAuth(value), isAuth(value))}
+          onClick={() => (handlesubmit(creds), toggleAuth(value), isAuth(value))}
         >
           {value}
         </Button>
-        </BreadcrumbItem>
-      </Breadcrumb>
-
+      </div>
       
     </div>
   );
